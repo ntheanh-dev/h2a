@@ -5,6 +5,8 @@ import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 
 // Tạo theme tùy chỉnh với bảng màu mới
@@ -41,7 +43,16 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontWeight: 700 },
+    h2: { fontWeight: 700 },
+    h3: { fontWeight: 700 },
+    h4: { fontWeight: 700 },
+    h5: { fontWeight: 600 },
+    h6: { fontWeight: 600 },
+    button: {
+      fontWeight: 600,
+    }
   },
   components: {
     MuiCssBaseline: {
@@ -49,6 +60,7 @@ const theme = createTheme({
         body: {
           margin: 0,
           padding: 0,
+          fontFamily: '"Inter", sans-serif',
         },
       },
     },
@@ -76,12 +88,19 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
+          {/* Routes with header */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
           </Route>
+          
+          {/* Auth routes without header */}
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          
+          {/* Catch-all route for any other path */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </ThemeProvider>
