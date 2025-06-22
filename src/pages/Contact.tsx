@@ -38,34 +38,34 @@ const Contact = () => {
   return (
     <Container maxWidth="lg" className="py-8">
       <Box className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Paper elevation={3} className="p-8 h-full">
-          <Typography variant="h3" component="h1" gutterBottom className="text-gray-800 mb-6">
+        <Paper elevation={3} className="p-8 h-full bg-gradient-to-br from-primary-50 to-primary-100">
+          <Typography variant="h3" component="h1" gutterBottom className="text-primary-800 mb-6">
             Liên hệ với chúng tôi
           </Typography>
           
-          <Typography variant="body1" paragraph className="text-gray-600 mb-6">
+          <Typography variant="body1" paragraph className="text-primary-700 mb-6">
             Hãy để lại thông tin và tin nhắn của bạn, chúng tôi sẽ phản hồi sớm nhất có thể.
           </Typography>
           
           <Box className="space-y-4">
             <Box className="flex items-center space-x-3">
-              <Email className="text-blue-600" />
-              <Typography>contact@h2a.com</Typography>
+              <Email className="text-primary-500" />
+              <Typography className="text-primary-700">contact@h2a.com</Typography>
             </Box>
             <Box className="flex items-center space-x-3">
-              <Phone className="text-blue-600" />
-              <Typography>+84 123 456 789</Typography>
+              <Phone className="text-primary-500" />
+              <Typography className="text-primary-700">+84 123 456 789</Typography>
             </Box>
             <Box className="flex items-center space-x-3">
-              <LocationOn className="text-blue-600" />
-              <Typography>Hà Nội, Việt Nam</Typography>
+              <LocationOn className="text-primary-500" />
+              <Typography className="text-primary-700">Hà Nội, Việt Nam</Typography>
             </Box>
           </Box>
         </Paper>
         
-        <Paper elevation={3} className="p-8">
+        <Paper elevation={3} className="p-8 bg-white">
           {submitted && (
-            <Alert severity="success" className="mb-4">
+            <Alert severity="success" className="mb-4 bg-primary-50 text-primary-800 border border-primary-200">
               Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.
             </Alert>
           )}
@@ -79,6 +79,7 @@ const Contact = () => {
               onChange={handleChange}
               required
               variant="outlined"
+              className="text-primary-700"
             />
             
             <TextField
@@ -90,6 +91,7 @@ const Contact = () => {
               onChange={handleChange}
               required
               variant="outlined"
+              className="text-primary-700"
             />
             
             <TextField
@@ -102,6 +104,7 @@ const Contact = () => {
               multiline
               rows={4}
               variant="outlined"
+              className="text-primary-700"
             />
             
             <Button
@@ -109,7 +112,7 @@ const Contact = () => {
               variant="contained"
               size="large"
               startIcon={<Send />}
-              className="bg-blue-600 hover:bg-blue-700 w-full"
+              className="bg-primary-500 hover:bg-primary-600 text-white w-full"
             >
               Gửi tin nhắn
             </Button>

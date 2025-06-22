@@ -41,9 +41,9 @@ const MainLayout = () => {
   };
 
   const drawer = (
-    <Box className="w-64">
+    <Box className="w-64 bg-gradient-to-b from-primary-50 to-white">
       <Toolbar>
-        <Typography variant="h6" noWrap component="div" className="text-blue-600 font-bold">
+        <Typography variant="h6" noWrap component="div" className="text-primary-600 font-bold">
           H2A
         </Typography>
       </Toolbar>
@@ -55,12 +55,12 @@ const MainLayout = () => {
               to={item.path}
               selected={location.pathname === item.path}
               onClick={() => setMobileOpen(false)}
-              className="hover:bg-blue-50"
+              className="hover:bg-primary-100"
             >
-              <ListItemIcon className="text-blue-600">
+              <ListItemIcon className="text-primary-500">
                 {item.icon}
               </ListItemIcon>
-              <ListItemText primary={item.text} />
+              <ListItemText primary={item.text} className="text-primary-700" />
             </ListItemButton>
           </ListItem>
         ))}
@@ -69,8 +69,8 @@ const MainLayout = () => {
   );
 
   return (
-    <Box className="min-h-screen bg-gray-50">
-      <AppBar position="static" className="bg-white shadow-sm">
+    <Box className="min-h-screen bg-primary-50">
+      <AppBar position="static" className="bg-white shadow-sm border-b border-primary-200">
         <Toolbar>
           {isMobile && (
             <IconButton
@@ -78,13 +78,13 @@ const MainLayout = () => {
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              className="mr-2 text-gray-800"
+              className="mr-2 text-primary-600"
             >
               <MenuIcon />
             </IconButton>
           )}
           
-          <Typography variant="h6" component="div" className="flex-grow text-blue-600 font-bold">
+          <Typography variant="h6" component="div" className="flex-grow text-primary-600 font-bold">
             H2A
           </Typography>
           
@@ -96,8 +96,8 @@ const MainLayout = () => {
                   component={Link}
                   to={item.path}
                   color="inherit"
-                  className={`text-gray-700 hover:text-blue-600 ${
-                    location.pathname === item.path ? 'text-blue-600' : ''
+                  className={`text-primary-700 hover:text-primary-500 hover:bg-primary-50 ${
+                    location.pathname === item.path ? 'text-primary-500 bg-primary-50' : ''
                   }`}
                 >
                   {item.text}

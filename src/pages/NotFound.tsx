@@ -7,15 +7,15 @@ const NotFound = () => {
 
   return (
     <Container maxWidth="md" className="py-16">
-      <Paper elevation={3} className="p-12 text-center">
+      <Paper elevation={3} className="p-12 text-center bg-gradient-to-br from-primary-50 to-white">
         <Box className="mb-8">
-          <Typography variant="h1" component="h1" className="text-9xl font-bold text-gray-300 mb-4">
+          <Typography variant="h1" component="h1" className="text-9xl font-bold text-primary-200 mb-4">
             404
           </Typography>
-          <Typography variant="h3" component="h2" gutterBottom className="text-gray-800 mb-4">
+          <Typography variant="h3" component="h2" gutterBottom className="text-primary-800 mb-4">
             Trang không tìm thấy
           </Typography>
-          <Typography variant="h6" color="text.secondary" paragraph className="text-gray-600 mb-8">
+          <Typography variant="h6" color="text.secondary" paragraph className="text-primary-600 mb-8">
             Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển.
           </Typography>
         </Box>
@@ -27,7 +27,7 @@ const NotFound = () => {
             startIcon={<HomeIcon />}
             component={Link}
             to="/"
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-primary-500 hover:bg-primary-600 text-white"
           >
             Về trang chủ
           </Button>
@@ -36,7 +36,7 @@ const NotFound = () => {
             size="large"
             startIcon={<ArrowBackIcon />}
             onClick={() => navigate(-1)}
-            className="border-blue-600 text-blue-600 hover:bg-blue-50"
+            className="border-primary-500 text-primary-500 hover:bg-primary-50"
           >
             Quay lại
           </Button>

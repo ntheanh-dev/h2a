@@ -7,18 +7,37 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 
-// Tạo theme tùy chỉnh
+// Tạo theme tùy chỉnh với bảng màu mới
 const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#1976d2',
+      main: '#0096c7', // primary-500
+      light: '#00b4d8', // primary-400
+      dark: '#0077b6', // primary-600
+      50: '#caf0f8',
+      100: '#ade8f4',
+      200: '#90e0ef',
+      300: '#48cae4',
+      400: '#00b4d8',
+      500: '#0096c7',
+      600: '#0077b6',
+      700: '#023e8a',
+      800: '#03045e',
+      900: '#03045e',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#48cae4', // primary-300
+      light: '#90e0ef', // primary-200
+      dark: '#00b4d8', // primary-400
     },
     background: {
-      default: '#f5f5f5',
+      default: '#f8fafc',
+      paper: '#ffffff',
+    },
+    text: {
+      primary: '#03045e', // primary-800
+      secondary: '#0077b6', // primary-600
     },
   },
   typography: {
@@ -30,6 +49,21 @@ const theme = createTheme({
         body: {
           margin: 0,
           padding: 0,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          borderRadius: '8px',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
         },
       },
     },
