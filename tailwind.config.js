@@ -1,44 +1,46 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme')
+const defaultTheme = require('tailwindcss/defaultTheme');
 
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+module.exports = {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
       },
+    },
+    extend: {
       colors: {
         primary: {
-          50: '#caf0f8',
-          100: '#ade8f4', 
-          200: '#90e0ef',
-          300: '#48cae4',
-          400: '#00b4d8',
-          500: '#0096c7',
-          600: '#0077b6',
-          700: '#023e8a',
-          800: '#03045e',
-          900: '#03045e',
+          black: "#14181F",
+          green: "#56FFA6",
+          grey: {
+            100: "#2B303B",
+            200: "#202731",
+            300: "#C4D3ED",
+          },
         },
-        // Định nghĩa các màu cơ bản
-        blue: {
-          50: '#caf0f8',
-          100: '#ade8f4',
-          200: '#90e0ef', 
-          300: '#48cae4',
-          400: '#00b4d8',
-          500: '#0096c7',
-          600: '#0077b6',
-          700: '#023e8a',
-          800: '#03045e',
-          900: '#03045e',
-        }
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },
     },
   },
   plugins: [],
-} 
+};

@@ -11,7 +11,7 @@ const Home = () => {
         </Box>
         
         <Typography variant="h2" component="h1" gutterBottom className="text-primary-800">
-          Chào mừng đến với H2A
+          Chào mừng đến với Writing App FE
         </Typography>
         
         <Typography variant="h5" color="text.secondary" paragraph className="mb-8 text-primary-600">

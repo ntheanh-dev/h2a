@@ -10,7 +10,6 @@ import {
   IconButton,
   Checkbox,
   FormControlLabel,
-  Grid,
   List,
   ListItem,
   ListItemIcon,

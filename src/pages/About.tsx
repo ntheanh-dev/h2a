@@ -13,7 +13,7 @@ const About = () => {
     <Container maxWidth="lg" className="py-8">
       <Paper elevation={3} className="p-8 bg-gradient-to-br from-primary-50 to-white">
         <Typography variant="h3" component="h1" gutterBottom className="text-primary-800 mb-6">
-          Về dự án H2A
+          Về dự án Writing App FE
         </Typography>
         
         <Typography variant="body1" paragraph className="text-primary-700 mb-6">

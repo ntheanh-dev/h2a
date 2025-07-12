@@ -8,7 +8,7 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
-
+import './index.css';
 // Tạo theme tùy chỉnh với bảng màu mới
 const theme = createTheme({
   palette: {

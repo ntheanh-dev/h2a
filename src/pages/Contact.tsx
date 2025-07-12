@@ -50,7 +50,7 @@ const Contact = () => {
           <Box className="space-y-4">
             <Box className="flex items-center space-x-3">
               <Email className="text-primary-500" />
-              <Typography className="text-primary-700">contact@h2a.com</Typography>
+              <Typography className="text-primary-700">contact@writing-app-fe.com</Typography>
             </Box>
             <Box className="flex items-center space-x-3">
               <Phone className="text-primary-500" />

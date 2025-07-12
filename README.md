@@ -1,4 +1,4 @@
-# H2A - React Application
+# Writing App FE - React Application
 
 Một ứng dụng React hiện đại được xây dựng với TypeScript, Material UI và Tailwind CSS.
 
@@ -133,6 +133,6 @@ Dự án này được phân phối dưới MIT License. Xem file `LICENSE` đ�
 
 ## 📞 Liên hệ
 
-- Email: contact@h2a.com
+- Email: contact@writing-app-fe.com
 - Phone: +84 123 456 789
 - Address: Hà Nội, Việt Nam

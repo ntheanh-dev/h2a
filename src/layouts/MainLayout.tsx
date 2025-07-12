@@ -75,7 +75,7 @@ const MainLayout = () => {
     <Box className="w-64 bg-gradient-to-b from-primary-50 to-white">
       <Toolbar>
         <Typography variant="h6" noWrap component="div" className="text-primary-600 font-bold">
-          H2A
+          Writing App FE
         </Typography>
       </Toolbar>
       <List>
@@ -146,7 +146,7 @@ const MainLayout = () => {
           )}
           
           <Typography variant="h6" component="div" className="flex-grow text-primary-600 font-bold">
-            H2A
+            Writing App FE
           </Typography>
           
           {!isMobile && (
