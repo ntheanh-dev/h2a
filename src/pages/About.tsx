@@ -10,40 +10,40 @@ const About = () => {
   ];
 
   return (
-    <Container maxWidth="lg" className="py-8">
-      <Paper elevation={3} className="p-8 bg-gradient-to-br from-primary-50 to-white">
-        <Typography variant="h3" component="h1" gutterBottom className="text-primary-800 mb-6">
+    <Container maxWidth="lg" className="h-full py-4 overflow-hidden">
+      <Paper elevation={3} className="h-full p-6 bg-gradient-to-br from-primary-50 to-white overflow-y-auto">
+        <Typography variant="h4" component="h1" gutterBottom className="text-primary-800 mb-4">
           Về dự án Writing App FE
         </Typography>
         
-        <Typography variant="body1" paragraph className="text-primary-700 mb-6">
+        <Typography variant="body1" paragraph className="text-primary-700 mb-4 text-sm">
           Đây là một ứng dụng React hiện đại được xây dựng với các công nghệ tiên tiến nhất.
           Dự án sử dụng Vite làm build tool để có tốc độ phát triển nhanh chóng.
         </Typography>
         
-        <Typography variant="h5" gutterBottom className="text-primary-700 mb-4">
+        <Typography variant="h6" gutterBottom className="text-primary-700 mb-3">
           Công nghệ sử dụng:
         </Typography>
         
-        <List>
+        <List className="mb-4">
           {technologies.map((tech, index) => (
-            <ListItem key={index} className="py-2">
-              <ListItemIcon className="text-primary-500">
+            <ListItem key={index} className="py-1">
+              <ListItemIcon className="text-primary-500 min-w-0 mr-2">
                 {tech.icon}
               </ListItemIcon>
               <ListItemText 
                 primary={tech.text} 
-                className="text-primary-700"
+                className="text-primary-700 text-sm"
               />
             </ListItem>
           ))}
         </List>
         
-        <Box className="mt-8 p-4 bg-primary-100 rounded-lg border border-primary-200">
-          <Typography variant="h6" gutterBottom className="text-primary-800">
+        <Box className="p-3 bg-primary-100 rounded-lg border border-primary-200">
+          <Typography variant="subtitle1" gutterBottom className="text-primary-800 text-sm font-semibold">
             Tính năng chính:
           </Typography>
-          <Typography variant="body2" className="text-primary-700">
+          <Typography variant="body2" className="text-primary-700 text-xs leading-tight">
             • Routing với React Router DOM<br/>
             • UI components từ Material UI<br/>
             • Styling với Tailwind CSS<br/>

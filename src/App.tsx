@@ -108,6 +108,9 @@ function App() {
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
+          
+          <Route path="/login" element={<Login />} />
+
         </Routes>
       </Router>
   );
@@ -117,7 +120,6 @@ const publicRoutes = [
   // { path: '/login', component: Login, isNotDefault: true },
   { path: '/about', component: About },
   { path: '/contact', component: Contact },
-  { path: '/login', component: Login },
 ];
 
 export default App;
