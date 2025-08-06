@@ -1,44 +1,30 @@
-import { Box, Typography, Button, Container, Paper } from '@mui/material';
-import { Home as HomeIcon } from '@mui/icons-material';
-import TestComponent from '../components/TestComponent';
+import { Container } from "@mui/material";
+import FeaturesSection from "../components/FeaturesSection";
 
 const Home = () => {
   return (
-    <Container maxWidth="lg" className="py-8">
-      <Paper elevation={3} className="p-8 text-center bg-gradient-to-br from-primary-50 to-primary-100">
-        <Box className="mb-6">
-          <HomeIcon sx={{ fontSize: 60, color: 'primary.main' }} />
-        </Box>
-        
-        <Typography variant="h2" component="h1" gutterBottom className="text-primary-800">
-          Chào mừng đến với Writing App FE
-        </Typography>
-        
-        <Typography variant="h5" color="text.secondary" paragraph className="mb-8 text-primary-600">
-          Một ứng dụng React hiện đại với TypeScript, Material UI và Tailwind CSS
-        </Typography>
-        
-        <Box className="space-x-4 mb-8">
-          <Button 
-            variant="contained" 
-            size="large"
-            className="bg-primary-500 hover:bg-primary-600 text-white"
-          >
-            Bắt đầu
-          </Button>
-          <Button 
-            variant="outlined" 
-            size="large"
-            className="border-primary-500 text-primary-500 hover:bg-primary-50"
-          >
-            Tìm hiểu thêm
-          </Button>
-        </Box>
+    <div>
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+        <Container maxWidth="lg">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold text-gray-800 mb-6">
+              Học tiếng Anh thông minh
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              Nền tảng học tiếng Anh toàn diện với AI hỗ trợ, giúp bạn phát triển đầy đủ 4 kỹ năng: Nghe, Nói, Đọc, Viết
+            </p>
+            <button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-medium text-lg transition-colors duration-200">
+              Bắt đầu học ngay
+            </button>
+          </div>
+        </Container>
+      </section>
 
-        <TestComponent />
-      </Paper>
-    </Container>
+      {/* Features Section */}
+      <FeaturesSection />
+    </div>
   );
 };
 
-export default Home; 
+export default Home;
