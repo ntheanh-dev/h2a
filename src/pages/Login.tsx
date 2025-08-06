@@ -1,80 +1,335 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Box,
   Typography,
   Button,
-  IconButton
-} from '@mui/material';
-import {
-  ArrowBackIosNew,
-  ArrowForwardIos,
-  Google,
-} from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import heroImage from '../assets/image/hero.png';
-
-const TESTIMONIALS = [
-  {
-    text: 'App makes it easy to invest in real estate using cryptocurrency. Whether I\'m buying luxury villas or fractional shares in commercial properties, every transaction is seamless, secure, and transparent.',
-    name: 'Isabella Garcia',
-    company: 'Layers Capital',
-    title: 'Global Real Estate Investment Firm',
-    image: heroImage,
-  },
-];
+  TextField,
+  Link,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import { Google } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
+import logo from "../assets/image/logo4.png";
+import { oauthConfig } from "../configs/oauthConfig";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [testimonialIdx, setTestimonialIdx] = useState(0);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error" | "warning" | "info",
+  });
 
-  const handleTestimonialNav = (dir: 'prev' | 'next') => {
-    setTestimonialIdx(idx => {
-      if (dir === 'prev') return idx === 0 ? TESTIMONIALS.length - 1 : idx - 1;
-      return idx === TESTIMONIALS.length - 1 ? 0 : idx + 1;
-    });
+  // Email validation function
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      return "Email không được để trống";
+    }
+    if (!emailRegex.test(email)) {
+      return "Email không hợp lệ";
+    }
+    return "";
   };
 
-  const testimonial = TESTIMONIALS[testimonialIdx];
+  // Password validation function
+  const validatePassword = (password: string) => {
+    if (!password) {
+      return "Mật khẩu không được để trống";
+    }
+    if (password.length < 6) {
+      return "Mật khẩu phải có ít nhất 6 ký tự";
+    }
+    return "";
+  };
+
+  // Handle email change
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    setEmailError(validateEmail(value));
+  };
+
+  // Handle password change
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    setPasswordError(validatePassword(value));
+  };
+
+  const handleLoginWithGoogle = () => {
+    const callbackUrl = oauthConfig.redirectUri;
+    const authUrl = oauthConfig.authUri;
+    const googleClientId = oauthConfig.clientId;
+
+    const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+      callbackUrl
+    )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+
+    const width = 800;
+    const height = 600;
+    // Tính toán vị trí giữa màn hình
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+
+    // Mở cửa sổ mới ở giữa màn hình
+    window.open(
+      targetUrl,
+      "_blank",
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+  };
+
+  const handleSignIn = async () => {
+    // Validate both fields before proceeding
+    const emailValidation = validateEmail(email);
+    const passwordValidation = validatePassword(password);
+
+    setEmailError(emailValidation);
+    setPasswordError(passwordValidation);
+
+    if (emailValidation || passwordValidation) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await axios.post("http://localhost:8080/auth/signin", {
+        email,
+        password,
+      });
+
+      // Login successful
+      setSnackbar({
+        open: true,
+        message: "Đăng nhập thành công!",
+        severity: "success",
+      });
+
+      // Store token in cookie if returned
+      if (response.data.token) {
+        // Set cookie with secure options
+        Cookies.set("auth_token", response.data.token, {
+          expires: 7, // 7 days
+          secure: true, // Only sent over HTTPS
+          sameSite: "strict", // CSRF protection
+          path: "/", // Available across the site
+        });
+      }
+
+      // Redirect to home page after a short delay
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      console.error("Login error:", error);
+
+      if (axios.isAxiosError(error)) {
+        // Handle axios error
+        const errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.";
+
+        setSnackbar({
+          open: true,
+          message: errorMessage,
+          severity: "error",
+        });
+      } else {
+        // Handle other errors
+        setSnackbar({
+          open: true,
+          message: "Lỗi kết nối. Vui lòng thử lại sau.",
+          severity: "error",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = () => {
+    // Navigate to sign up page
+    console.log("Sign up clicked");
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
 
   return (
-    <Box className="min-h-screen flex font-inter">
-      {/* Left: Image */}
-      <Box className="hidden md:flex w-3/5 relative">
-        <img src={heroImage} alt="hero" className="w-full h-full object-contain" />
-        <Box className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.08)' }} />
-      </Box>
+    <Box className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-100 relative overflow-hidden">
+      {/* Main content */}
+      <Box className="flex flex-col items-center justify-center w-full max-w-md mx-auto px-4">
+        {/* Greet Logo */}
+        <Box className="flex items-center">
+          <Box className="rounded-md w-56 h-36 flex items-center justify-center">
+            <img src={logo} alt="logo"></img>
+          </Box>
+        </Box>
 
-      {/* Right: Login Form */}
-      <Box className="flex flex-col w-2/5 md:w-2/5 items-center justify-center bg-white min-h-screen px-4 py-8 relative">
-        
-        <Box className="w-full max-w-md mx-auto flex flex-col items-center">
-          <Typography variant="h4" className="font-bold mb-2 text-center text-black">Đăng nhập</Typography>
+        {/* Login Card */}
+        <Box className="bg-white rounded-2xl p-10 shadow-2xl w-full max-w-md">
+          {/* Sign in title */}
+          <Typography
+            variant="h4"
+            className="font-bold text-gray-700 text-center mb-8 text-2xl"
+          >
+            Đăng nhập
+          </Typography>
 
-          <Box className="flex flex-col gap-3 mb-4 w-full">
-            <Button 
-              startIcon={<Google />} 
-              variant="outlined" 
-              size="large"
-              className="normal-case transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:bg-gray-100 hover:border-black"
-              sx={{
-                borderColor: '#000000',
-                color: '#000000',
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                  borderColor: '#000000',
-                  backgroundColor: '#f3f4f6',
-                }
-              }}
+          {/* Email field */}
+          <Box className="mb-5">
+            <Typography
+              variant="body2"
+              className="text-gray-500 mb-2 font-medium"
             >
-              Đăng nhập với Google
-            </Button>
+              Email
+            </Typography>
+            <TextField
+              fullWidth
+              value={email}
+              onChange={handleEmailChange}
+              variant="outlined"
+              placeholder="Nhập email của bạn"
+              className="rounded-lg"
+              error={!!emailError}
+              helperText={emailError}
+              disabled={loading}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": {
+                    borderColor: emailError ? "#ef4444" : "#d1d5db",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: emailError ? "#ef4444" : "#9ca3af",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: emailError ? "#ef4444" : "#3b82f6",
+                  },
+                },
+                "& .MuiFormHelperText-root": {
+                  marginLeft: 0,
+                  marginRight: 0,
+                  fontSize: "12px",
+                },
+              }}
+            />
           </Box>
 
+          {/* Password field */}
+          <Box className="mb-5">
+            <Typography
+              variant="body2"
+              className="text-gray-500 mb-2 font-medium"
+            >
+              Mật khẩu
+            </Typography>
+            <TextField
+              fullWidth
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              variant="outlined"
+              placeholder="Mật khẩu"
+              className="rounded-lg"
+              error={!!passwordError}
+              helperText={passwordError}
+              disabled={loading}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": {
+                    borderColor: passwordError ? "#ef4444" : "#d1d5db",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: passwordError ? "#ef4444" : "#9ca3af",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: passwordError ? "#ef4444" : "#3b82f6",
+                  },
+                },
+                "& .MuiFormHelperText-root": {
+                  marginLeft: 0,
+                  marginRight: 0,
+                  fontSize: "12px",
+                },
+              }}
+            />
+          </Box>
+
+          {/* Forgot password link */}
+          <Box className="text-right mb-4">
+            <Link
+              href="#"
+              className="text-blue-500 no-underline text-sm font-medium hover:underline"
+            >
+              Quên mật khẩu?
+            </Link>
+          </Box>
+
+          {/* Sign in button */}
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={handleSignIn}
+            disabled={loading}
+            className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg py-3 normal-case font-semibold text-base mb-6 hover:from-blue-600 hover:to-blue-800 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          </Button>
+
+          {/* Divider */}
+          <Box className="flex items-center my-4">
+            <Box className="flex-1 h-px bg-gray-200"></Box>
+            <Typography variant="body2" className="text-gray-400 mx-4 text-sm">
+              hoặc
+            </Typography>
+            <Box className="flex-1 h-px bg-gray-200"></Box>
+          </Box>
+
+          {/* Google sign in button */}
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<Google />}
+            onClick={handleLoginWithGoogle}
+            disabled={loading}
+            className="border-gray-300 rounded-lg py-3 normal-case font-medium text-base text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 disabled:opacity-50"
+          >
+            Tiếp tục với Google
+          </Button>
         </Box>
       </Box>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
-export default Login; 
+export default Login;
