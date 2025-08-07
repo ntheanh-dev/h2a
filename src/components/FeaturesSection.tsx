@@ -135,7 +135,7 @@ const FeaturesSection: React.FC = () => {
       description: "Cải thiện kỹ năng viết với AI hỗ trợ ngữ pháp và từ vựng",
       buttonText: "Luyện viết ngay",
       buttonColor: "bg-purple-600 hover:bg-purple-700",
-      route: "/sentence-writing"
+      route: "/writing"
     },
     {
       isFree: true,

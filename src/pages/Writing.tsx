@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { CheckCircle, Edit, Flag, Layers } from "@mui/icons-material";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const COLOR_BLACK = "#000000";
 const COLOR_NAVY = "#131f38";
 const COLOR_ORANGE = "#ffaa13";
@@ -49,6 +49,9 @@ const LEVEL_OPTIONS = [
 ];
 
 const Writing = () => {
+
+  const navigate = useNavigate();
+
   const [selectedMethod, setSelectedMethod] = useState<"topic" | "custom">(
     "topic"
   );
@@ -410,6 +413,7 @@ const Writing = () => {
             fontSize: 18,
             boxShadow: "none",
           }}
+          onClick={() => navigate("/sentence-writing")}
         >
           Bắt đầu luyện viết
         </Button>

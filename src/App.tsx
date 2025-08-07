@@ -7,8 +7,10 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Writing from "./pages/Writing";
 import VocabularyPractice from "./pages/VocabularyPractice";
 import SentenceWriting from "./pages/SentenceWriting";
+import BilingualPassage from "./pages/BilingualPassage";
 import ListeningPractice from "./pages/ListeningPractice";
 import SpeakingPractice from "./pages/SpeakingPractice";
 import RequiredAuth from "./components/RequiredAuth";
@@ -29,6 +31,15 @@ function App() {
         />
 
         <Route
+          path="/writing"
+          element={
+            <MainLayout>
+              <Writing />
+            </MainLayout>
+          }
+        />
+
+        <Route
           path="/vocabulary-practice"
           element={
             <MainLayout>
@@ -41,7 +52,7 @@ function App() {
           path="/sentence-writing"
           element={
             <MainLayout>
-              <SentenceWriting />
+              <BilingualPassage />
             </MainLayout>
           }
         />
