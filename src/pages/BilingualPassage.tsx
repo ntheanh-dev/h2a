@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Paper, TextField, Button } from '@mui/material';
+import { Container, Typography, Box, Paper, TextField, Button, Tooltip } from '@mui/material';
 import { FaPen, FaClock, FaMicrophone, FaLightbulb, FaCheck, FaComment, FaThumbsUp } from 'react-icons/fa';
 
 const BilingualPassage = () => {
@@ -7,7 +7,6 @@ const BilingualPassage = () => {
   const [translation, setTranslation] = useState('');
   const [selectedSentenceIndex, setSelectedSentenceIndex] = useState<number | null>(null);
   const [showTranslation, setShowTranslation] = useState<number | null>(null);
-  
   // Mock API response data - in real app this would come from API call
   const sentences = [
     "Một trong những khía cạnh quan trọng của cuộc sống đại học không chỉ nằm ở việc tiếp thu kiến thức chuyên môn, mà còn ở việc phát triển các kỹ năng mềm thông qua các hoạt động và dự án thực tế.",
@@ -21,13 +20,13 @@ const BilingualPassage = () => {
 
   // Mock English translations for demonstration
   const englishTranslations = [
-    "One of the important aspects of university life lies not only in acquiring specialized knowledge, but also in developing soft skills through practical activities and projects.",
-    "In fact, participating in academic clubs, student organizations, or research projects provides excellent opportunities for students to practice teamwork, effective communication, and creative problem-solving skills.",
-    "For example, a student participating in a debate club not only improves their oratory and critical thinking abilities, but also learns how to listen and respect others' opinions.",
-    "Furthermore, managing a scientific research project requires students to have the ability to plan, analyze data, and present results logically and persuasively, skills that are extremely valuable for their future careers.",
-    "This is particularly important in the increasingly competitive job market, where employers seek not only candidates with solid professional knowledge, but also the ability to adapt and contribute to the organization's development.",
-    "Additionally, participating in extracurricular activities helps students expand their network, connect with people who share similar interests and passions, thereby creating opportunities for collaboration and development in the future.",
-    "For instance, participating in a student volunteer organization can help students meet people with similar community service goals, thereby building meaningful relationships and developing leadership skills."
+    // "One of the important aspects of university life lies not only in acquiring specialized knowledge, but also in developing soft skills through practical activities and projects.",
+    // "In fact, participating in academic clubs, student organizations, or research projects provides excellent opportunities for students to practice teamwork, effective communication, and creative problem-solving skills.",
+    // "For example, a student participating in a debate club not only improves their oratory and critical thinking abilities, but also learns how to listen and respect others' opinions.",
+    // "Furthermore, managing a scientific research project requires students to have the ability to plan, analyze data, and present results logically and persuasively, skills that are extremely valuable for their future careers.",
+    // "This is particularly important in the increasingly competitive job market, where employers seek not only candidates with solid professional knowledge, but also the ability to adapt and contribute to the organization's development.",
+    // "Additionally, participating in extracurricular activities helps students expand their network, connect with people who share similar interests and passions, thereby creating opportunities for collaboration and development in the future.",
+    // "For instance, participating in a student volunteer organization can help students meet people with similar community service goals, thereby building meaningful relationships and developing leadership skills."
   ];
 
   useEffect(() => {
@@ -90,54 +89,48 @@ const BilingualPassage = () => {
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-sm h-full overflow-y-auto relative">
                 <div className="leading-7 text-base text-gray-800">
                   {sentences.map((sentence, index) => (
-                    <span key={index} className="relative inline">
-                      {/* Translation Tooltip (shown on hover) */}
-                      {showTranslation === index && (
-                        <div className="fixed z-50" style={{
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          width: '80%',
-                          maxWidth: '600px'
-                        }}>
-                          <div className="bg-green-100 border border-green-300 rounded-lg p-4 shadow-xl">
-                            <Typography 
-                              variant="body2" 
-                              className="text-green-800 leading-6 text-sm italic"
+                    <React.Fragment key={index}>
+                      {index <= englishTranslations.length - 1 ? (
+                        <span key={index} className="relative inline">
+                          <span
+                            className={`cursor-pointer border-l-4 transition-all duration-100 rounded px-1 py-0.5 font-medium ${showTranslation === index ? 'border-l-green-500 bg-green-100 text-green-800' : 'border-l-blue-500 bg-blue-100 text-blue-800 '}}
+                        `}
+                            onMouseEnter={() => handleSentenceHover(index)}
+                            onMouseLeave={handleSentenceLeave}
+                          >
+                            {showTranslation === index ? sentence : englishTranslations[index]}
+                          </span>
+                          {index < sentences.length - 1 && ' '}
+                        </span>
+                      ) : (
+                        (englishTranslations.length === index ? (
+                          <span key={index} className="relative inline">
+                            <span
+                              className={`rounded border-l-red-500 border-l-4 px-1 py-0.5 bg-red-100 text-red-800 font-medium}
+                        `}
                             >
-                              {englishTranslations[index]}
-                            </Typography>
-                            {/* Close button */}
-                            <button 
-                              className="absolute top-2 right-2 text-green-600 hover:text-green-800"
-                              onClick={() => setShowTranslation(null)}
+                              {sentence}
+                            </span>
+                            {index < sentences.length - 1 && ' '}
+                          </span>
+                        ) : (
+                          <span key={index} className="relative inline">
+                            <span
                             >
-                              ✕
-                            </button>
-                          </div>
-                        </div>
+                              {sentence}
+                            </span>
+                            {index < sentences.length - 1 && ' '}
+                          </span>
+                        ))
                       )}
-                      
-                      <span
-                        className={`cursor-pointer transition-all duration-200 rounded px-1 py-0.5 ${
-                          selectedSentenceIndex === index
-                            ? 'bg-blue-100 text-blue-800 font-medium'
-                            : 'hover:bg-blue-50 hover:text-blue-700'
-                        }`}
-                        onMouseEnter={() => handleSentenceHover(index)}
-                        onMouseLeave={handleSentenceLeave}
-                      >
-                        {sentence}
-                      </span>
-                      {index < sentences.length - 1 && ' '}
-                    </span>
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Translation Input */}
-            <div className="px-6 mb-6 flex-shrink-0">
+            <div className="px-6 mb-6">
               <div className="relative">
                 <TextField
                   fullWidth
@@ -167,18 +160,18 @@ const BilingualPassage = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="px-6 pb-6 flex-shrink-0">
-              <div className="flex gap-4">
+            <div className="px-6 pb-6">
+              <div className="flex gap-4 justify-center">
                 <Button
                   variant="contained"
-                  className="flex-1 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-base"
+                  className="w-48 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-base"
                   startIcon={<div className="w-2 h-2 bg-white rounded-full" />}
                 >
                   Xem gợi ý
                 </Button>
                 <Button
                   variant="contained"
-                  className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-base"
+                  className="w-48 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-base"
                   startIcon={<FaCheck className="text-white" />}
                 >
                   Kiểm tra

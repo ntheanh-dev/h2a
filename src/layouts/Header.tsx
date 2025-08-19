@@ -5,7 +5,6 @@ import {
   Box,
   Menu,
   MenuItem,
-  Toolbar,
   Modal,
   Backdrop,
   Fade,
@@ -100,11 +99,10 @@ const Header = () => {
                   ref={(el) => {
                     menuRefs.current[index] = el;
                   }}
-                  className={`text-md transition-all duration-150 ease-in-out relative hover:cursor-pointer ${
-                    isActive
+                  className={`text-md transition-all duration-150 ease-in-out relative hover:cursor-pointer ${isActive
                       ? "text-black font-arial"
                       : "text-gray-600 hover:text-black"
-                  }`}
+                    }`}
                   style={{ paddingBottom: 4 }}
                 >
                   {item.label}
@@ -127,11 +125,10 @@ const Header = () => {
           {/* API Key Button */}
           <button
             type="button"
-            className={`flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white text-base shadow-sm focus:outline-none transition-all duration-200 ${
-              Boolean(apiKey)
+            className={`flex items-center gap-2 px-6 py-2 rounded-lg font-medium text-white text-base shadow-sm focus:outline-none transition-all duration-200 ${Boolean(apiKey)
                 ? "bg-green-500 hover:bg-green-600"
                 : "bg-orange-500 hover:bg-orange-600"
-            }`}
+              }`}
             onClick={handleApiKeyButtonClick}
           >
             <FaKey className="text-lg" />

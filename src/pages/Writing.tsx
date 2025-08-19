@@ -9,7 +9,10 @@ import {
 } from "@mui/material";
 import { CheckCircle, Edit, Flag, Layers } from "@mui/icons-material";
 import { useState } from "react";
+import { Snackbar, Alert } from "@mui/material";
+import { api } from "../configs/API";
 import { useNavigate } from "react-router-dom";
+import { showOverlay, hideOverlay } from "../utils/overlay";
 const COLOR_BLACK = "#000000";
 const COLOR_NAVY = "#131f38";
 const COLOR_ORANGE = "#ffaa13";
@@ -20,32 +23,36 @@ const TOPIC_OPTIONS = [
   {
     group: "Giao tiếp hằng ngày",
     options: [
-      "Hội thoại hằng ngày",
-      "Chào hỏi và xã giao",
-      "Mua sắm",
-      "Nhà hàng và đặt món",
-      "Di chuyển và giao thông",
-      "Hỏi đường",
-      "Trò chuyện về thời tiết",
+      { label: "Mua sắm", value: "Shopping" },
+      { label: "Nhà hàng và đặt món", value: "Restaurants and ordering" },
+      { label: "Di chuyển và giao thông", value: "Transportation" },
+      { label: "Thời tiết", value: "weather" },
+      { label: "Hỏi đường", value: "Asking for directions" },
     ],
   },
   {
     group: "Công việc",
     options: [
-      "Phỏng vấn việc làm",
-      "Giao tiếp văn phòng",
-      "Báo cáo và thuyết trình",
-      "Gửi email",
+      { label: "Phỏng vấn việc làm", value: "Job interview" },
+      { label: "Giao tiếp văn phòng", value: "Office communication" },
+      { label: "Báo cáo và thuyết trình", value: "Reporting and presenting" },
+      { label: "Gửi email", value: "Email writing" },
     ],
   },
 ];
 
 const LEVEL_OPTIONS = [
-  { value: "easy", label: "Dễ", icon: "🌱", level: "A1" },
-  { value: "fair", label: "Khá dễ", icon: "🌿", level: "A2" },
-  { value: "medium", label: "Trung bình", icon: "🧠", level: "B1" },
-  { value: "hard", label: "Khó", icon: "🎯", level: "B2" },
-  { value: "very_hard", label: "Rất khó", icon: "🏆", level: "C1" },
+  { value: "A1", label: "Dễ", icon: "🌱", level: "A1" },
+  { value: "A2", label: "Khá dễ", icon: "🌿", level: "A2" },
+  { value: "B1", label: "Trung bình", icon: "🧠", level: "B1" },
+  { value: "B2", label: "Khó", icon: "🎯", level: "B2" },
+  { value: "C1", label: "Rất khó", icon: "🏆", level: "C1" },
+];
+
+const SENTENCE_COUNT_OPTIONS = [
+  { value: 10, label: "10 câu", icon: "🌿", level: "10" },
+  { value: 15, label: "15 câu", icon: "🧠", level: "15" },
+  { value: 20, label: "20 câu", icon: "🎯", level: "20" },
 ];
 
 const Writing = () => {
@@ -55,15 +62,52 @@ const Writing = () => {
   const [selectedMethod, setSelectedMethod] = useState<"topic" | "custom">(
     "topic"
   );
-  const [selectedLevel, setSelectedLevel] = useState<string>("fair");
-  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState<string>("A2");
+  const [selectedTopic, setSelectedTopic] = useState<string>("Shopping");
   const [customTopic, setCustomTopic] = useState("");
   const [customParagraph, setCustomParagraph] = useState("");
+  const [sentenceCount, setSentenceCount] = useState<number>(10);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({ open: false, message: "", severity: "success" });
 
   // Đếm số từ
   const wordCount = customParagraph.trim()
     ? customParagraph.trim().split(/\s+/).length
     : 0;
+
+  const handleStartWriting = async () => {
+    // Example API call using state params
+    try {
+      setIsSubmitting(true);
+      showOverlay({ message: "Đang tạo bài luyện viết..." });
+      const flatOptions = TOPIC_OPTIONS.flatMap((g) => g.options);
+      const selectedPreset = flatOptions.find((o) => o.value === selectedTopic);
+      const payload = {
+        level: selectedLevel,
+        topic: selectedPreset ? selectedPreset.value : customTopic,
+        language: "vietnamese",
+        sentenceCount: sentenceCount
+      };
+
+      const response = await api.post("/writings/generate", payload);
+
+      const conversationId = response.data.result?.conversationId;
+      if (conversationId) {
+        navigate(`/sentence-writing/${response.data.result}`);
+      } else {
+        setSnackbar({ open: true, message: "Có lỗi xảy ra. Vui lòng thử lại.", severity: "error" });
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.";
+      setSnackbar({ open: true, message, severity: "error" });
+    } finally {
+      setIsSubmitting(false);
+      hideOverlay();
+    }
+    return;
+  };
+
+  const handleCloseSnackbar = () => setSnackbar((s) => ({ ...s, open: false }));
 
   return (
     <Container className="py-6">
@@ -113,24 +157,24 @@ const Writing = () => {
             style={
               selectedMethod === "topic"
                 ? {
-                    background: COLOR_WHITE,
-                    color: COLOR_NAVY,
-                    borderRadius: 8,
-                    paddingLeft: 24,
-                    paddingRight: 24,
-                    boxShadow: "none",
-                    fontWeight: 700,
-                  }
+                  background: COLOR_WHITE,
+                  color: COLOR_NAVY,
+                  borderRadius: 8,
+                  paddingLeft: 24,
+                  paddingRight: 24,
+                  boxShadow: "none",
+                  fontWeight: 700,
+                }
                 : {
-                    color: COLOR_WHITE,
-                    borderColor: COLOR_WHITE,
-                    borderRadius: 8,
-                    paddingLeft: 24,
-                    paddingRight: 24,
-                    background: "transparent",
-                    boxShadow: "none",
-                    fontWeight: 700,
-                  }
+                  color: COLOR_WHITE,
+                  borderColor: COLOR_WHITE,
+                  borderRadius: 8,
+                  paddingLeft: 24,
+                  paddingRight: 24,
+                  background: "transparent",
+                  boxShadow: "none",
+                  fontWeight: 700,
+                }
             }
             onClick={() => setSelectedMethod("topic")}
             startIcon={
@@ -142,6 +186,8 @@ const Writing = () => {
             {selectedMethod === "topic" ? "Đã chọn" : "Chọn"}
           </Button>
         </Box>
+
+
         <Box
           className="flex-1 rounded-2xl p-6 shadow-sm flex flex-col gap-3 border"
           style={{
@@ -177,24 +223,24 @@ const Writing = () => {
             style={
               selectedMethod === "custom"
                 ? {
-                    background: COLOR_WHITE,
-                    color: COLOR_NAVY,
-                    borderRadius: 8,
-                    paddingLeft: 24,
-                    paddingRight: 24,
-                    boxShadow: "none",
-                    fontWeight: 700,
-                  }
+                  background: COLOR_WHITE,
+                  color: COLOR_NAVY,
+                  borderRadius: 8,
+                  paddingLeft: 24,
+                  paddingRight: 24,
+                  boxShadow: "none",
+                  fontWeight: 700,
+                }
                 : {
-                    color: COLOR_WHITE,
-                    borderColor: COLOR_WHITE,
-                    borderRadius: 8,
-                    paddingLeft: 24,
-                    paddingRight: 24,
-                    background: "transparent",
-                    boxShadow: "none",
-                    fontWeight: 700,
-                  }
+                  color: COLOR_WHITE,
+                  borderColor: COLOR_WHITE,
+                  borderRadius: 8,
+                  paddingLeft: 24,
+                  paddingRight: 24,
+                  background: "transparent",
+                  boxShadow: "none",
+                  fontWeight: 700,
+                }
             }
             onClick={() => setSelectedMethod("custom")}
             startIcon={
@@ -316,7 +362,6 @@ const Writing = () => {
             <TextField
               select
               SelectProps={{ displayEmpty: true }}
-              placeholder="-- Chọn chủ đề --"
               value={selectedTopic}
               onChange={(e) => setSelectedTopic(e.target.value)}
               className="bg-white rounded-lg"
@@ -329,12 +374,11 @@ const Writing = () => {
               }}
               fullWidth
             >
-              <MenuItem value="">-- Chọn chủ đề --</MenuItem>
               {TOPIC_OPTIONS.map((group) => [
                 <ListSubheader key={group.group}>{group.group}</ListSubheader>,
                 group.options.map((opt) => (
-                  <MenuItem key={opt} value={opt}>
-                    {opt}
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
                   </MenuItem>
                 )),
               ])}
@@ -373,6 +417,7 @@ const Writing = () => {
             <TextField
               select
               SelectProps={{ displayEmpty: true }}
+              placeholder="-- Chọn mức độ --"
               value={selectedLevel}
               onChange={(e) => setSelectedLevel(e.target.value)}
               className="bg-white rounded-lg"
@@ -386,6 +431,35 @@ const Writing = () => {
               fullWidth
             >
               {LEVEL_OPTIONS.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  <span style={{ marginRight: 8 }}>{opt.icon}</span>
+                  <span>{opt.label}</span>
+                  <span style={{ marginLeft: 12, color: "#888", fontSize: 13 }}>
+                    ({opt.level})
+                  </span>
+                </MenuItem>
+              ))}
+            </TextField>
+            <Typography variant="body2" style={{ color: COLOR_NAVY }}>
+              Lựa chọn số câu AI sẽ tạo ra:
+            </Typography>
+            <TextField
+              select
+              SelectProps={{ displayEmpty: true }}
+              value={sentenceCount}
+              onChange={(e) => setSentenceCount(Number(e.target.value))}
+              placeholder="-- Chọn số câu --"
+              className="bg-white rounded-lg"
+              InputProps={{
+                style: {
+                  background: COLOR_WHITE,
+                  borderRadius: 8,
+                  color: COLOR_BLACK,
+                },
+              }}
+              fullWidth
+            >
+              {SENTENCE_COUNT_OPTIONS.map((opt) => (
                 <MenuItem key={opt.value} value={opt.value}>
                   <span style={{ marginRight: 8 }}>{opt.icon}</span>
                   <span>{opt.label}</span>
@@ -413,11 +487,20 @@ const Writing = () => {
             fontSize: 18,
             boxShadow: "none",
           }}
-          onClick={() => navigate("/sentence-writing")}
+          onClick={handleStartWriting}
+          disabled={isSubmitting}
         >
           Bắt đầu luyện viết
         </Button>
       </Box>
+
+      {/* global overlay handled via App-level Backdrop */}
+
+      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled" sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

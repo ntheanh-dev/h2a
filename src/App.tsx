@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
+// removed unused ThemeProvider/createTheme
+import { Snackbar, Alert, Backdrop, CircularProgress, Box } from "@mui/material";
 import { MainLayout } from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -9,15 +9,34 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Writing from "./pages/Writing";
 import VocabularyPractice from "./pages/VocabularyPractice";
-import SentenceWriting from "./pages/SentenceWriting";
+// removed unused direct import of SentenceWriting
 import BilingualPassage from "./pages/BilingualPassage";
 import ListeningPractice from "./pages/ListeningPractice";
 import SpeakingPractice from "./pages/SpeakingPractice";
 import RequiredAuth from "./components/RequiredAuth";
 import "./index.css";
 import Authenticate from "./pages/Authenticated";
+import { useEffect, useState } from "react";
+import { setNotifyHandler, type NotifySeverity } from "./utils/notify";
+import { setOverlayHandler } from "./utils/overlay";
 
 function App() {
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: NotifySeverity }>(
+    { open: false, message: "", severity: "info" }
+  );
+  const [overlay, setOverlay] = useState<{ open: boolean; message?: string }>({ open: false });
+
+  useEffect(() => {
+    setNotifyHandler((message, severity = "info") => {
+      setSnackbar({ open: true, message, severity });
+    });
+    setOverlayHandler((open, options) => {
+      setOverlay({ open, message: options?.message });
+    });
+  }, []);
+
+  const handleCloseSnackbar = () => setSnackbar((s) => ({ ...s, open: false }));
+
   return (
     <Router>
       <Routes>
@@ -99,6 +118,22 @@ function App() {
 
         <Route path="/login" element={<Login />} />
       </Routes>
+      <Backdrop open={overlay.open} sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 2000 }}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <CircularProgress color="inherit" size={24} />
+          <span>{overlay.message || 'Đang xử lý...'}</span>
+        </Box>
+      </Backdrop>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled" sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Router>
   );
 }
